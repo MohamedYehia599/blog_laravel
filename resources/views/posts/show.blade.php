@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.app')
 
 @section('title')
 show
@@ -16,7 +16,10 @@ show
     <p class="card-text">{{$post->title}}</p>
     <h5 class="card-title">Description :-</h5>
     <p class="card-text">{{$post->description}}</p>
-    
+    <h5>Image : </h5>
+    <div style="width:100px;height:100px;">
+    <img style="width:100%;" src="{{Storage::url($post->image)}}" alt="">
+    </div>
   </div>
 </div>
 
@@ -79,15 +82,10 @@ show
       <p> Created at :  {{date('Y-m-d',strtotime($comment->created_at))}}</p>
 
       <div class="d-flex justify-content-start">
-    <a class="btn btn-primary mx-1" href="{{route('comments.edit',['comment'=>$comment['id']])}}">Edit</a>
-      <form action="{{route('comments.destroy',['comment'=>$comment['id']])}}" method="post" style="margin:0;">
-        @method('DELETE')
-    @csrf
-    <button class="btn btn-danger mx-1 " type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button>
-   
-        
-        
-        </form>
+      <a class="btn btn-primary mx-1" href="{{route('comments.edit',['comment'=>$comment['id']])}}">Edit</a>
+      <button data-id="{{$comment['id']}}" class="btn btn-danger mx-1 " type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button>
+
+     
         
 </div>
       </div>
@@ -97,7 +95,31 @@ show
 @endforeach
 @endif
 
-
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete ?!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Do you really  want to delete this post ?!
+      </div>
+      <div class="modal-footer">
+        <a type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</a>
+        
+         <form id="deleteForm" action="{{route('comments.destroy', ['comment' => 1])}}" method="POST">
+        @method('DELETE')
+    @csrf 
+        <button type="submit" class="btn btn-danger">Delete</button>
+        
+        </form>
+       
+       </div>
+    </div>
+  </div>
+</div> 
 
 
 

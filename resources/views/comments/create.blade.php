@@ -1,6 +1,6 @@
 
 
-@extends('layouts.main')
+@extends('layouts.app')
 
 @section('title')
 comment create
@@ -9,7 +9,7 @@ comment create
 
 
 @section('content')
-<form action="/posts/{{$postId}}/comments" method="post">
+<form action="{{route('comments.store',['post'=>$postId])}}" method="post">
     @csrf
 <div class="mb-3">
   <label for="exampleFormControlTextarea1" class="form-label">Comment</label>

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\UpdateCommentRequest;
 class CommentController extends Controller
 {
     public function create($postId){
@@ -16,14 +18,13 @@ class CommentController extends Controller
 
 
 
-    public function store($postId,Request $request){
+    public function store(StoreCommentRequest $request,$postId){
         $input = $request->all();
-        $comment=Comment::create([
+       
+            $comment=Post::find($postId)->comments()->create([
             'body'=>$input['body'],
             'user_id'=>$input['user_id'] ? $input['user_id']:null,
-            'commentable_id'=>$postId ,
-            'commentable_type'=>Post::class
-
+          
         ]);
         return to_route('posts.show',['post'=>$postId]);
     }
@@ -31,14 +32,13 @@ class CommentController extends Controller
 
 
     public function edit($commentId){
-        $comment=Post::find($commentId);
+        $comment=Comment::find($commentId);
         $users=User::all();
-        
        return view('comments.edit',['comment'=>$comment,'users'=>$users]);
 
     }
 
-    public function update($commentId,Request $request){
+    public function update(UpdateCommentRequest $request,$commentId){
         
         $comment=Comment::find( $commentId);
         

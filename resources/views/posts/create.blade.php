@@ -1,5 +1,5 @@
 
-@extends('layouts.main')
+@extends('layouts.app')
 
 @section('title')
 create
@@ -10,7 +10,7 @@ create
 
 
 @section('content')
-<form action="/posts" method="post">
+<form enctype="multipart/form-data" action="{{route('posts.index')}}" method="post">
   @csrf
 <div class="mb-3 mt-5">
   <label for="exampleFormControlInput1" class="form-label">Title</label>
@@ -19,6 +19,10 @@ create
 <div class="mb-3">
   <label for="exampleFormControlTextarea1" class="form-label">Description</label>
   <textarea name="description" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+</div>
+<div class="mb-3">
+  <label for="exampleFormControlTextarea1" class="form-label">Image</label>
+  <input type="file" name="image" class="form-control" id="exampleFormControlTextarea1" rows="3"></input>
 </div>
 <div class="mb-3">
   <label for="exampleFormControlInput1" class="form-label">Post Creator</label>

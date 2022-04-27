@@ -4,10 +4,10 @@ edit
 
 
 
-@extends('layouts.main')
-
+@extends('layouts.app')
+@dd($post)
 @section('content')
-<form action="/posts/{{$post->id}}" method="post">
+<form enctype="multipart/form-data" action="{{route('posts.update',['post'=>$post])}}" method="post">
 @method('PUT')
     @csrf
 
@@ -20,14 +20,14 @@ edit
   <textarea name="description" class="form-control" id="exampleFormControlTextarea1" rows="3" value="">{{$post->description}}</textarea>
 </div>
 <div class="mb-3">
+  <label for="exampleFormControlTextarea1" class="form-label">Image</label>
+  <input type="file" name="image" class="form-control" id="exampleFormControlTextarea1" rows="3"></input>
+</div>
+<div class="mb-3">
   <label for="exampleFormControlInput1" class="form-label">Post Creator</label>
   <select  name="user_id" class="form-select" aria-label="Default select example">
-    @if($post->user_id)
     <option value="{{$post->user_id}}" name="user_id">{{$post->user->name}}</option>
-    @else
-  <option value="" name="user_id">---</option>
-  @endif
-  <option value="" name="user_id">---</option>
+   
   @foreach ($users as $user)
   
   <option value ="{{$user->id}}" name="user_id">{{$user->name}}</option> 

@@ -15,28 +15,35 @@ use App\Http\Controllers\PostController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 
-Route::get('/posts',[PostController::class,'index'])->name('posts.index');
-Route::get('/posts/create',[PostController::class,'create'])->name('posts.create');
-Route::post('/posts',[PostController::class,'store'])->name('posts.store');
-Route::delete('/posts/{post}',[PostController::class,'destroy'])->name('posts.destroy');
-Route::get('/posts/{post}/comments',[PostController::class,'show'])->name('posts.show');
-Route::get('/posts/{post}/edit',[PostController::class,'edit'])->name('posts.edit');
-Route::put('/posts/{post}',[PostController::class,'update'])->name('posts.update');
-Route::get('/posts/{post}/comments/create',[CommentController::class,'create'])->name('comments.create');
-Route::post('/posts/{post}/comments',[CommentController::class,'store'])->name('comments.store');
-Route::get('/comments/{comment}/edit',[CommentController::class,'edit'])->name('comments.edit');
-Route::put('/comments/{comment}',[CommentController::class,'update'])->name('comments.update');
-Route::delete('/comments/{comment}',[CommentController::class,'destroy'])->name('comments.destroy');
 
+Route::group(['middleware' => ['auth:web']],function(){
+    Route::get('/posts',[PostController::class,'index'])->name('posts.index');
+    Route::get('/posts/create',[PostController::class,'create'])->name('posts.create');
+    Route::post('/posts',[PostController::class,'store'])->name('posts.store');
+    Route::delete('/posts/{post}',[PostController::class,'destroy'])->name('posts.destroy');
+    Route::get('/posts/{post}/comments',[PostController::class,'show'])->name('posts.show');
+    Route::get('/posts/{post}/edit',[PostController::class,'edit'])->name('posts.edit');
+    Route::put('/posts/{post}',[PostController::class,'update'])->name('posts.update');
+    Route::get('/posts/{post}/comments/create',[CommentController::class,'create'])->name('comments.create');
+    Route::post('/posts/{post}/comments',[CommentController::class,'store'])->name('comments.store');
+    Route::get('/comments/{comment}/edit',[CommentController::class,'edit'])->name('comments.edit');
+    Route::put('/comments/{comment}',[CommentController::class,'update'])->name('comments.update');
+    Route::delete('/comments/{comment}',[CommentController::class,'destroy'])->name('comments.destroy');
+
+});
 
 //to do 
 
-//3-delete must show warning if no nothing happens and if yes route             semi done
+
+//update title directly  to be unique
+//
+//show error msg of wrong user_id
 
 
-//bonus after delete the delete button should be a restore button for period of time 
-//use soft delete in laravel
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

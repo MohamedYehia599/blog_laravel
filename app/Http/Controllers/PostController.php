@@ -9,9 +9,10 @@ use Illuminate\Support\Arr;
 use League\CommonMark\Extension\Attributes\Node\Attributes;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\Comment;
-
-
-
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
+use  Illuminate\Support\Facades\Validator;
+use  Illuminate\Support\Facades\Storage;
 class PostController extends Controller
 {
     public function index(){
@@ -26,18 +27,32 @@ class PostController extends Controller
         
         return view('posts.create',['users'=>$users]);
     }
-    public function store(Request $request){
+
+
+    public function store(StorePostRequest $request){
+       
+          
         $input = $request->all();
         
-        
-        $post=Post::create([
+       
+            
+            $user = User::find($input['user_id']);
+            $path=$request->file('image')->store('public');
+            if ($user) {
+                $post=Post::create([
             'title'=>$input['title'],
             'description'=>$input['description'],
-            'user_id'=>$input['user_id'] ? $input['user_id']:null,
-
+            'user_id'=>$input['user_id'],
+            'image'=>$path,
         ]);
+            }
         return to_route('posts.index');
-    }
+    
+    }   
+   
+    
+    
+    
 
 
     public function edit($postId){
@@ -47,7 +62,8 @@ class PostController extends Controller
     }
     public function show($postId){
         $post=Post::find($postId);
-        $comments=Comment::where('commentable_id',$postId)->where('commentable_type',Post::class)->get();
+        
+        $comments=$post->comments;
         return view('posts.show',['post'=>$post,'comments'=>$comments]);
     }
 
@@ -56,17 +72,25 @@ public function destroy($postId){
     return to_route('posts.index');
 }
 
-public function update($postId , Request $request){
-   
-    
+public function update( UpdatePostRequest $request ,$postId ){
+    $post=Post::find($postId);
+    Storage::delete($post->image);
+    $path=$request->file('image')->store('public');
     $input = $request->all();
     
-Post::where('id', $postId)->update([
-'title'=>$input['title'],
-'description'=>$input['description'],
-'user_id'=>$input['user_id'] ? $input['user_id']:null,
-]);
-return to_route('posts.index');
+       $user = User::find($input['user_id']);
+       if($user){
+        Post::where('id', $postId)->update([
+            'title'=>$input['title'],
+            'description'=>$input['description'],
+            'user_id'=>$input['user_id'] ,
+            'image'=>$path
+            ]);
+            
+            return to_route('posts.index');
+       }   
+    
+
 
 }
 }
