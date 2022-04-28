@@ -3,6 +3,11 @@
 use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use App\Models\User;
+
+
+use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\GithubController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,13 +40,28 @@ Route::group(['middleware' => ['auth:web']],function(){
     Route::delete('/comments/{comment}',[CommentController::class,'destroy'])->name('comments.destroy');
 
 });
+Route::get('/auth/github/redirect',[GithubController::class,'handle_github_redirect']);
+
+Route::get('/auth/github/callback', [GithubController::class,'handle_github_redirect']);
+    
+Route::get('/auth/google/redirect',[GoogleController::class,'handle_google_redirect'] );
+    
+Route::get('auth/google/callback',[GoogleController::class,'handle_google_callback']);
+ 
+
+    
+
+
+
+
+
 
 //to do 
 
 
 //update title directly  to be unique
-//
-//show error msg of wrong user_id
+
+
 
 
 Auth::routes();

@@ -5,7 +5,6 @@ edit
 
 
 @extends('layouts.app')
-@dd($post)
 @section('content')
 <form enctype="multipart/form-data" action="{{route('posts.update',['post'=>$post])}}" method="post">
 @method('PUT')

@@ -16,7 +16,7 @@ use  Illuminate\Support\Facades\Storage;
 class PostController extends Controller
 {
     public function index(){
-        $posts=Post::paginate(5);
+        $posts=Post::with('user')->paginate(5);
         
         return view('posts.index',['posts'=>$posts]);
     }
@@ -68,6 +68,9 @@ class PostController extends Controller
     }
 
 public function destroy($postId){
+    $post=Post::find($postId);
+    if($post->image){Storage::delete($post->image);}
+    
     Post::where('id', $postId)->delete();
     return to_route('posts.index');
 }
@@ -93,4 +96,8 @@ public function update( UpdatePostRequest $request ,$postId ){
 
 
 }
+
+
+
+
 }
